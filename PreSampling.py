@@ -107,7 +107,7 @@ for i in range(0, 100): #TODO müsste noch automatisch an Spaltenanzahl des Exce
 af = pd.read_excel("Airports.xlsx")
 
 Airports = {}
-for i in range(0, 6): #TODO müsste noch automatisch an Spaltenanzahl des Excel Sheets angepasst werden
+for i in range(0, 6): #TODO müsste noch automatisch an Spaltenanzahl des Excel Sheets angepasst werden,hier
     list = []
     list.append(af['AIRPORT_CITY'][i])
     list.append(af['AIRPORT_TYPE'][i])
