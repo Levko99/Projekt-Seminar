@@ -238,3 +238,4 @@ def Kombi6(Flights, Aircrafttypes, Airports):
 print(Kombi6(Flights, Aircrafttypes, Airports))
 
 
+print("hi")
