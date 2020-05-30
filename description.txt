@@ -1,0 +1,21 @@
+Instanzname: 20_100-6-80
+
+Konfigurationsdaten:
+
+LH   flights:      100
+     airports:     6
+     hub-flights:  80
+
+Maximale Flottengroesse (+10%):                                                 5
+Multiplikator-Intervall TA-Zeit pro Flughafen:                                  [0.8, 1.4]
+Kosten-Intervall pro ueberbuchtem Passagier:                                    [200.0, 600.0]
+Kosten pro Passagier bei Flugausfall:                                           1000.0
+Intervall fuer woechentliche Fixkosten pro Flugzeug:                            [42000.0, 53000.0]
+Intervall fuer Kilometer-Kosten pro Flugzeug:                                   [20.0, 35.0]
+Intervall fuer Wartungskosten pro Flugzeugtyp:                                  [4000, 6000]
+Intervall fuer Wartungsdauern pro Flugzeugtyp:                                  [400, 600]
+Intervall fuer Kosteneinsparungen pro Flugabfolge:                              [1000.0, 15000.0]
+Intervall fuer max. absolute Zeit zwischen zwei Wartungen pro Flugzeugtyp:      [50000, 50000]
+Intervall fuer max. Flugzeit zwischen zwei Wartungen pro Flugzeugtyp:           [2000, 2800]
+Intervall fuer max. Anzahl an Starts zwischen zwei Wartungen pro Flugzeugtyp:   [6, 6]
+
