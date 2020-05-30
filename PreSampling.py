@@ -72,7 +72,7 @@ for i in range(0, 6):  #TODO müsste noch automatisch an Spaltenanzahl des Excel
 sf = pd.read_excel(schedules)
 Flights = {}
 
-for i in range(0, 100): #TODO müsste noch automatisch an Spaltenanzahl des Excel Sheets angepasst werden
+for i in range(0, 100): #TODO müsste noch automatisch an Spaltenanzahl des Excel Sheets angepasst werden, das müssten wir noch machen
     list = []
     list.append(sf['FLIGHT_NUMBER'][i])
     list.append(sf['FLIGHT_TYPE'][i])
