@@ -109,8 +109,6 @@ for i in range(0, 6):  # TODO müsste noch automatisch an Spaltenanzahl des Exce
     Airports[af['AIRPORT_IATA'][i]] = list
 
 
-
-
 # ------------------- Pre-Sampling Methoden -------------------------------------------------------------------
 
 
@@ -126,7 +124,7 @@ def Kombi1(Flights, Aircrafttypes):
     return len(kombinationen), kombinationen
 
 
-#print(Kombi1(Flights, Aircrafttypes))
+# print(Kombi1(Flights, Aircrafttypes))
 
 
 # hier werden nur die Kombis zugelassen, bei denen der Ort passt, Zeit egal
@@ -139,10 +137,10 @@ def Kombi2(Flights, Aircrafttypes):
                 if Flights[i][4] == Flights[j][3]:
                     kombinationen.append([i, j, 0, t])
                     kombinationen.append([i, j, 1, t])
-    return len(kombinationen)  , kombinationen
+    return len(kombinationen), kombinationen
 
 
-#print(Kombi2(Flights, Aircrafttypes))
+# print(Kombi2(Flights, Aircrafttypes))
 
 
 # hier wird zusätzlich betrachtet ob der Abflugzeitpunkt des 2. Flugs nach der Ankunft des 1. FLugs ist
@@ -159,7 +157,7 @@ def Kombi3(Flights, Aircrafttypes):
     return len(kombinationen), kombinationen
 
 
-#print(Kombi3(Flights, Aircrafttypes))
+# print(Kombi3(Flights, Aircrafttypes))
 
 
 # hier betrachtet man zusätzlich noch, dass das zeitlich auch mit den TA Zeiten klappt
@@ -174,10 +172,10 @@ def Kombi4(Flights, Aircrafttypes, Airports):
                     if Flights[i][6] + (Flights[i][13] + Flights[j][12]) * multiplier <= Flights[j][5]:
                         kombinationen.append([i, j, 0, t])
                         kombinationen.append([i, j, 1, t])
-    return len(kombinationen),kombinationen
+    return len(kombinationen), kombinationen
 
 
-#print(Kombi4(Flights, Aircrafttypes, Airports))
+# print(Kombi4(Flights, Aircrafttypes, Airports))
 
 
 # hier wird zusätzlich geschaut ob zwischen den beiden Flügen eine Wartung ausgeführt werden kann r=1 oder nicht =0
@@ -197,10 +195,10 @@ def Kombi5(Flights, Aircrafttypes, Airports):
                             kombinationen.append([i, j, 1, t])
                         else:
                             kombinationen.append([i, j, 0, t])
-    return len(kombinationen)  , kombinationen
+    return len(kombinationen), kombinationen
 
 
-#print(Kombi5(Flights, Aircrafttypes, Airports))
+# print(Kombi5(Flights, Aircrafttypes, Airports))
 
 
 # hier wird zusätzlich überprüft ob die Range des Flugzeugs für die  Distanz des Fluges auch ausreicht
@@ -223,16 +221,20 @@ def Kombi6(Flights, Aircrafttypes, Airports):
                                 kombinationen.append([i, j, 0, t])
     return kombinationen  # len(kombinationen)
 
+
 print(Kombi6(Flights, Aircrafttypes, Airports))
 
-#------------------------------------------------------------------------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------
 
 def Kilometerkosten():
     kombisVomPreSampling = Kombi6(Flights, Aircrafttypes, Airports)
     KilometerFlugKosten = [0 for i in range(len(kombisVomPreSampling))]
     for i in range(len(kombisVomPreSampling)):
-        KilometerFlugKosten[i] = Flights[kombisVomPreSampling[i][1]][7] * Aircrafttypes[kombisVomPreSampling[i][3]][9]  # =dist_j* kmCost_t
+        KilometerFlugKosten[i] = Flights[kombisVomPreSampling[i][1]][7] * Aircrafttypes[kombisVomPreSampling[i][3]][
+            9]  # =dist_j* kmCost_t
     return KilometerFlugKosten
+
 
 print(Kilometerkosten())
 
@@ -247,7 +249,6 @@ def VariablenListeFürGurobi():
 
 print(VariablenListeFürGurobi())
 
-
 # You can also provide your own list of tuples as indices. For example, x = model.addVars([(3,'a'), (3,'b'), (7,'b'), (7,'c')])
 # would be accessed in the same way as the previous example x[3,'a'], x[7,'c']
 
@@ -256,18 +257,31 @@ m = Model('test')
 x = m.addVars(VariablenListeFürGurobi(),
               vtype=GRB.BINARY,
               obj=Kilometerkosten())
-print(x)
-print(x.keys()[0])    #so kann man für die Nebenbedingungen auf unsere Indizes zugreifen
-print(x.keys()[0][0])
+
+m.addConstrs(
+    (x.sum(i, '*', '*', '*') <= 1 for i in Flights.keys()), 'Jeder Flug hat höchstens einen Nachfolger')
 
 
-# es gibt immer eine Kurz-Gurobi Schreibweise oder eine normale python (siehe Bsp.)s
+m.addConstrs(
+    (x.sum('*', j, '*', '*') <= 1 for j in Flights.keys()), 'Jeder FLug hat höchstens einen Vorgänger')
 
-#Example usage:
 
-  # x = m.addVars([(1,2), (1,3), (2,3)])
-  #expr = x.sum()       # LinExpr: x[1,2] + x[1,3] + x[2,3]
-  #expr = x.sum(1, '*') # LinExpr: x[1,2] + x[1,3]
-  #expr = x.sum('*', 3) # LinExpr: x[1,3] + x[2,3]
-  #expr = x.sum(1, 3)   # LinExpr: x[1,3]
+for t in Aircrafttypes.keys():
+    m.addConstrs(
+        (x.sum(i, '*', '*', t) == x.sum('*', i, '*', t) for i in Flights.keys()), 'Flusserhaltung')
 
+m.write('Test.lp')
+m.optimize()
+
+# print(x)
+# print(x.keys()[0])    #so kann man für die Nebenbedingungen auf unsere Indizes zugreifen
+# print(x.keys()[i][0])
+
+
+# Example usage:
+
+# x = m.addVars([(1,2), (1,3), (2,3)])
+# expr = x.sum()       # LinExpr: x[1,2] + x[1,3] + x[2,3]
+# expr = x.sum(1, '*') # LinExpr: x[1,2] + x[1,3]
+# expr = x.sum('*', 3) # LinExpr: x[1,3] + x[2,3]
+# expr = x.sum(1, 3)   # LinExpr: x[1,3]
