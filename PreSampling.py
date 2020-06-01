@@ -5,7 +5,7 @@ from gurobipy import *
 schedules = 'Schedule.xlsx'
 aircrafts = 'Aircrafts.xlsx'
 through_values = 'Through_Values.xlsx'
-airports = 'Airports.xlsx'  # bla nochmaaal
+airports = 'Airports.xlsx'
 
 # ---------------------- Aircraft-Datei --------------------------------------------------------------------------------
 
@@ -223,7 +223,7 @@ def Kombi6(Flights, Aircrafttypes, Airports):
                                 kombinationen.append([i, j, 0, t])
     return kombinationen  # len(kombinationen)
 
-# print(Kombi6(Flights, Aircrafttypes, Airports))
+print(Kombi6(Flights, Aircrafttypes, Airports))
 
 #------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -261,7 +261,7 @@ print(x.keys()[0])    #so kann man für die Nebenbedingungen auf unsere Indizes 
 print(x.keys()[0][0])
 
 
-# es gibt immer eine Kurz-Gurobi Schreibweise oder eine normale python (siehe Bsp.)
+# es gibt immer eine Kurz-Gurobi Schreibweise oder eine normale python (siehe Bsp.)s
 
 #Example usage:
 
