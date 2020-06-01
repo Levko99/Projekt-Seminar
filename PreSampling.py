@@ -261,14 +261,17 @@ x = m.addVars(VariablenListeFürGurobi(),
 m.addConstrs(
     (x.sum(i, '*', '*', '*') <= 1 for i in Flights.keys()), 'Jeder Flug hat höchstens einen Nachfolger')
 
-
 m.addConstrs(
     (x.sum('*', j, '*', '*') <= 1 for j in Flights.keys()), 'Jeder FLug hat höchstens einen Vorgänger')
-
 
 for t in Aircrafttypes.keys():
     m.addConstrs(
         (x.sum(i, '*', '*', t) == x.sum('*', i, '*', t) for i in Flights.keys()), 'Flusserhaltung')
+
+
+#Zielfunktion nimmt auch tatsächlich (sinvolle?) Werte an, falls diese Nebenbedingung einkommentiert wird muss der Constraint drüber auskommentiert werden
+#m.addConstrs(
+ #  (x.sum('*', '*', '*', t) == 3  for t in Aircrafttypes.keys()))
 
 m.write('Test.lp')
 m.optimize()
